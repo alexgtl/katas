@@ -2,11 +2,12 @@ import { GildedRose } from '@/gilded-rose'
 import { AgedBrieItem } from '@/items/agedBrie'
 import { AVAILABLE_ITEMS } from '@/items/availableItems'
 import { BackstagePassItem } from '@/items/backstagePassItem'
+import { ConjuredItem } from '@/items/conjuredItem'
 import itemFactory from '@/items/itemFactory'
 import { StandardItem } from '@/items/standardItem'
 import { SulfurasItem } from '@/items/sulfurasItem'
-import { ItemStandardQuality } from '@/items/valueObjects/itemStandardQuality'
 import { ItemSellIn } from '@/items/valueObjects/itemSellIn'
+import { ItemStandardQuality } from '@/items/valueObjects/itemStandardQuality'
 import {ItemSulfurasQuality} from "@/items/valueObjects/itemSulfurasQuality";
 
 describe('Solid Gilded Rose', () => {
@@ -139,5 +140,17 @@ describe('Solid Gilded Rose', () => {
 
     expect(backstagePassITem.getSellin()).toStrictEqual(expectedSellIn)
     expect(backstagePassITem.getQuality()).toStrictEqual(expectedQuality)
+  })
+
+  fit('should degrade conjured items twice as fast', () => {
+    const conjuredItem: ConjuredItem = itemFactory.getItem(AVAILABLE_ITEMS.Conjured, 0, 10) as ConjuredItem
+    const expectedSellIn = new ItemSellIn(-1)
+    const expectedQuality = new ItemStandardQuality(6)
+
+    const gildedRose = new GildedRose([conjuredItem])
+    gildedRose.update()
+
+    expect(conjuredItem.getSellin()).toStrictEqual(expectedSellIn)
+    expect(conjuredItem.getQuality()).toStrictEqual(expectedQuality)
   })
 })

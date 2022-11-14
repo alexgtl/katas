@@ -8,15 +8,19 @@ export class ItemName implements ItemNameInterface {
     this.name = name
   }
 
-  public isAgedBrie(): boolean {
+  public isAgedBrie(): Boolean {
     return this.name === AVAILABLE_ITEMS.AgedBrie
   }
 
-  public isSulfuras(): boolean {
+  public isSulfuras(): Boolean {
     return this.name === AVAILABLE_ITEMS.Sulfuras
   }
 
-  public isBackstagePass(): boolean {
+  public isBackstagePass(): Boolean {
     return this.name === AVAILABLE_ITEMS.BackstagePass
+  }
+
+  public isConjuredItem(): Boolean {
+    return this.name === AVAILABLE_ITEMS.Conjured
   }
 }

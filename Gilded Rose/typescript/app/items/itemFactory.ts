@@ -5,6 +5,7 @@ import { SulfurasItem } from "./sulfurasItem"
 import { ItemName } from "./valueObjects/ItemName"
 import { ItemStandardQuality } from "./valueObjects/itemStandardQuality"
 import { ItemSellIn } from "./valueObjects/itemSellIn"
+import { ConjuredItem } from "./conjuredItem"
 
 export default class itemFactory {
   static getItem(name: String, sellInValue: number, qualityValue: number) {
@@ -22,6 +23,10 @@ export default class itemFactory {
 
     if (itemName.isBackstagePass()) {
       return new BackstagePassItem(itemName, itemSellIn, itemQuality)
+    }
+
+    if (itemName.isConjuredItem()) {
+      return new ConjuredItem(itemName, itemSellIn, itemQuality)
     }
 
     return new StandardItem(itemName, itemSellIn, itemQuality)
