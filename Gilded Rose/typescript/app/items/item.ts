@@ -1,15 +1,15 @@
+import { availableQualities } from "./interfaces/availableQualities"
 import { ItemName } from "./valueObjects/ItemName"
-import { ItemQuality } from "./valueObjects/itemQuality"
 import { ItemSellIn } from "./valueObjects/itemSellIn"
 
 export abstract class Item {
   private name: ItemName
-  private sellIn: ItemSellIn
-  private quality: ItemQuality
+  private readonly sellIn: ItemSellIn
+  protected readonly quality: availableQualities
 
   private readonly DEFAULT_DAYS_TO_EXPIRE = 0
 
-  constructor (name: ItemName, sellIn: ItemSellIn, quality: ItemQuality) {
+  protected constructor (name: ItemName, sellIn: ItemSellIn, quality: availableQualities) {
     this.name = name
     this.sellIn = sellIn
     this.quality = quality
@@ -21,31 +21,19 @@ export abstract class Item {
     return this.sellIn
   }
 
-  public getQuality(): ItemQuality {
+  public getQuality(): availableQualities {
     return this.quality
   }
 
-  public isExpired(daysToExpire = this.DEFAULT_DAYS_TO_EXPIRE): Boolean {
-    return this.sellIn.isLessThan(daysToExpire);
+  public setQualityToMinValue(): void {
+      this.quality.resetBaseValue(0)
   }
 
-  public increaseSellin(): void {
-    this.sellIn.increase()
+  public isExpired(daysToExpire = this.DEFAULT_DAYS_TO_EXPIRE): Boolean {
+    return this.sellIn.isLessThan(daysToExpire)
   }
 
   public decreaseSellin(): void {
     this.sellIn.decrease()
-  }
-
-  public increaseQuality(): void {
-    this.quality.increase()
-  }
-
-  public decreaseQuality(): void {
-    this.quality.decrease()
-  }
-
-  public setQualityToMinValue(): void {
-    this.quality.setToMinValue()
   }
 }

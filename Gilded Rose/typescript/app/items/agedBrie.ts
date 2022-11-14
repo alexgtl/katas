@@ -1,10 +1,10 @@
-import { Item } from "./item"
 import { ItemName } from "./valueObjects/ItemName"
-import { ItemQuality } from "./valueObjects/itemQuality"
+import { ItemStandardQuality } from "./valueObjects/itemStandardQuality"
 import { ItemSellIn } from "./valueObjects/itemSellIn"
+import { UpdatableItem } from "@/items/updatableItem";
 
-export class AgedBrieItem extends Item {
-  constructor(name: ItemName, sellIn: ItemSellIn, quality: ItemQuality) {
+export class AgedBrieItem extends UpdatableItem {
+  constructor(name: ItemName, sellIn: ItemSellIn, quality: ItemStandardQuality) {
     super(name, sellIn, quality)
   }
 

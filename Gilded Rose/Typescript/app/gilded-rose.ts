@@ -1,5 +1,4 @@
 import { Item } from "./items/item"
-import { StandardItem } from "./items/standardItem"
 
 export class GildedRose {
   items: Array<Item>;

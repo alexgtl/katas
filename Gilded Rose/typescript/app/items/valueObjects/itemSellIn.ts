@@ -20,6 +20,6 @@ export class ItemSellIn implements ItemSellInInterface {
   }
 
   public isLessThan(days: number): Boolean {
-    return this.value < days;
+    return this.value <= days;
   }
 }

@@ -5,13 +5,14 @@ import { BackstagePassItem } from '@/items/backstagePassItem'
 import itemFactory from '@/items/itemFactory'
 import { StandardItem } from '@/items/standardItem'
 import { SulfurasItem } from '@/items/sulfurasItem'
-import { ItemQuality } from '@/items/valueObjects/itemQuality'
+import { ItemStandardQuality } from '@/items/valueObjects/itemStandardQuality'
 import { ItemSellIn } from '@/items/valueObjects/itemSellIn'
+import {ItemSulfurasQuality} from "@/items/valueObjects/itemSulfurasQuality";
 
 describe('Solid Gilded Rose', () => {
   it('should decrease quality and SellIn every day', () => {
     const item: StandardItem = itemFactory.getItem('test',2, 2) as StandardItem
-    const expectedQuality = new ItemQuality(1)
+    const expectedQuality = new ItemStandardQuality(1)
     const expectedSellIn = new ItemSellIn(1)
 
     const gildedRose = new GildedRose([item])
@@ -24,7 +25,7 @@ describe('Solid Gilded Rose', () => {
   it('should decrease double quality if is expired', () => {
     const item: StandardItem = itemFactory.getItem('test',0, 2) as StandardItem
     const expectedSellIn = new ItemSellIn(-1)
-    const expectedQuality = new ItemQuality(0)
+    const expectedQuality = new ItemStandardQuality(0)
 
     const gildedRose = new GildedRose([item])
     gildedRose.update()
@@ -34,9 +35,9 @@ describe('Solid Gilded Rose', () => {
   })
 
   it('should never have quality below 0', () => {
-    const item: StandardItem = itemFactory.getItem('test',0, 1) as StandardItem
+    const item: StandardItem = itemFactory.getItem('test',0, 1 ) as StandardItem
     const expectedSellIn = new ItemSellIn(-1)
-    const expectedQuality = new ItemQuality(0)
+    const expectedQuality = new ItemStandardQuality(0)
 
     const gildedRose = new GildedRose([item])
     gildedRose.update()
@@ -47,9 +48,9 @@ describe('Solid Gilded Rose', () => {
 
   it('should increase Aged brie item quality as long as sellIn decrease', () => {
     // arrange
-    const agedBrieItem: AgedBrieItem = itemFactory.getItem(AVAILABLE_ITEMS.AgedBrie, 2, 2)
+    const agedBrieItem: AgedBrieItem = itemFactory.getItem(AVAILABLE_ITEMS.AgedBrie, 2, 2) as AgedBrieItem
     const expectedSellIn = new ItemSellIn(1)
-    const expectedQuality = new ItemQuality(3)
+    const expectedQuality = new ItemStandardQuality(3)
 
     const gildedRose = new GildedRose([agedBrieItem])
     gildedRose.update()
@@ -59,8 +60,8 @@ describe('Solid Gilded Rose', () => {
   })
 
   it('should never have items with quality over 50', () => {
-    const agedBrieItem: AgedBrieItem = itemFactory.getItem(AVAILABLE_ITEMS.AgedBrie, 2, 50)
-    const expectedQuality = new ItemQuality(50)
+    const agedBrieItem: AgedBrieItem = itemFactory.getItem(AVAILABLE_ITEMS.AgedBrie, 2, 50) as AgedBrieItem
+    const expectedQuality = new ItemStandardQuality(50)
 
     const gildedRose = new GildedRose([agedBrieItem])
     gildedRose.update()
@@ -69,9 +70,21 @@ describe('Solid Gilded Rose', () => {
   })
 
   it('should never degrade Sulfuras item', () => {
-    const sulfurasItem: SulfurasItem = itemFactory.getItem(AVAILABLE_ITEMS.Sulfuras, 2, 2)
+    const sulfurasItem: SulfurasItem = itemFactory.getItem(AVAILABLE_ITEMS.Sulfuras, 2, 2) as SulfurasItem
     const expectedSellIn = new ItemSellIn(1)
-    const expectedQuality = new ItemQuality(2)
+    const expectedQuality = new ItemSulfurasQuality()
+
+    const gildedRose = new GildedRose([sulfurasItem])
+    gildedRose.update()
+
+    expect(sulfurasItem.getSellin()).toStrictEqual(expectedSellIn)
+    expect(sulfurasItem.getQuality()).toStrictEqual(expectedQuality)
+  })
+
+  it('should have 80 points in quality if Sulfuras Item', () => {
+    const sulfurasItem: SulfurasItem = itemFactory.getItem(AVAILABLE_ITEMS.Sulfuras, 2, 30) as SulfurasItem
+    const expectedSellIn = new ItemSellIn(1)
+    const expectedQuality = new ItemSulfurasQuality()
 
     const gildedRose = new GildedRose([sulfurasItem])
     gildedRose.update()
@@ -83,7 +96,7 @@ describe('Solid Gilded Rose', () => {
   it('should increment Backstage Pass Item quality as sellin value decrease', () => {
     const backstagePassITem: BackstagePassItem = itemFactory.getItem(AVAILABLE_ITEMS.BackstagePass, 12, 10) as BackstagePassItem
     const expectedSellIn = new ItemSellIn(11)
-    const expectedQuality = new ItemQuality(11)
+    const expectedQuality = new ItemStandardQuality(11)
 
     const gildedRose = new GildedRose([backstagePassITem])
     gildedRose.update()
@@ -95,7 +108,7 @@ describe('Solid Gilded Rose', () => {
   it('should increment Backstage Pass Item quality double when less than 10 days', () => {
     const backstagePassITem: BackstagePassItem = itemFactory.getItem(AVAILABLE_ITEMS.BackstagePass, 10, 10) as BackstagePassItem
     const expectedSellIn = new ItemSellIn(9)
-    const expectedQuality = new ItemQuality(12)
+    const expectedQuality = new ItemStandardQuality(12)
 
     const gildedRose = new GildedRose([backstagePassITem])
     gildedRose.update()
@@ -107,7 +120,7 @@ describe('Solid Gilded Rose', () => {
   it('should increment Backstage Pass Item quality triple when less than 10 days', () => {
     const backstagePassITem: BackstagePassItem = itemFactory.getItem(AVAILABLE_ITEMS.BackstagePass, 5, 10) as BackstagePassItem
     const expectedSellIn = new ItemSellIn(4)
-    const expectedQuality = new ItemQuality(13)
+    const expectedQuality = new ItemStandardQuality(13)
 
     const gildedRose = new GildedRose([backstagePassITem])
     gildedRose.update()
@@ -117,9 +130,9 @@ describe('Solid Gilded Rose', () => {
   })
 
   it('should set Backstage Pass Item quality to 0 when expired', () => {
-    const backstagePassITem: BackstagePassItem = itemFactory.getItem(AVAILABLE_ITEMS.BackstagePass, 0, 999) as BackstagePassItem
+    const backstagePassITem: BackstagePassItem = itemFactory.getItem(AVAILABLE_ITEMS.BackstagePass, 0, 40) as BackstagePassItem
     const expectedSellIn = new ItemSellIn(-1)
-    const expectedQuality = new ItemQuality(0)
+    const expectedQuality = new ItemStandardQuality(0)
 
     const gildedRose = new GildedRose([backstagePassITem])
     gildedRose.update()
